@@ -5,6 +5,14 @@ struct Attribute {
 	let type: Int
 	let data: Int
 
+	init(from data: inout [UInt8]) {
+		self.uri = data.nextWord()
+		self.key = data.nextWord()
+		self.value = data.nextWord()
+		self.type = data.nextWord() >> 24
+		self.data = data.nextWord()
+	}
+
 	// swiftlint:disable:next cyclomatic_complexity
 	func toString(_ strings: [String], namespace: Namespace?) -> String {
 		let key = strings[self.key]
