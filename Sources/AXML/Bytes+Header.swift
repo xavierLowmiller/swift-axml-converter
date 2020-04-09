@@ -52,15 +52,17 @@ extension Bytes {
 		// Skip resource section
 		removeFirst(chunkSize - 8)
 	}
+}
 
-	private mutating func readUTF8String(length: Int) -> String {
+private extension Bytes {
+	mutating func readUTF8String(length: Int) -> String {
 		defer { removeFirst(length) }
 		let count = Int(self[1])
 		let chars = self[2..<count + 2]
 		return String(decoding: chars, as: UTF8.self)
 	}
 
-	private mutating func readUTF16String(length: Int) -> String {
+	mutating func readUTF16String(length: Int) -> String {
 		func getUInt16(at offset: Int) -> UInt16 {
 			UInt16(self[offset + 1]) << 8 | UInt16(self[offset + 0])
 		}
