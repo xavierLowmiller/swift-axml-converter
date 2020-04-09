@@ -12,7 +12,7 @@ extension Array where Element == UInt8 {
         var xmlLines = [#"<?xml version="1.0" encoding="utf-8"?>"#]
 
         var namespace: Namespace?
-        var namespaceUrlAttribute: String?
+        var namespaceUrl: String?
         var indentationLevel = 0
 
         while !isEmpty {
@@ -26,48 +26,30 @@ extension Array where Element == UInt8 {
 
             switch tagType {
             case .startNamespace:
-                let prefix = nextWord()
-                let code = nextWord()
-                namespace = Namespace(
-                    code: code,
-                    uri: strings[code],
-                    prefix: strings[prefix]
-                )
-                namespaceUrlAttribute = namespace?.urlAttribute
+                namespace = parseNamespace(strings: strings)
+                namespaceUrl = namespace?.urlAttribute
 
             case .endNamespace:
                 removeFirst(4) // class attribute, unused
                 removeFirst(4) // class attribute, unused
                 namespace = nil
-                namespaceUrlAttribute = nil
+                namespaceUrl = nil
 
             case .startTag:
-                removeFirst(4) // Tag URI
-                let tagName = nextWord()
-                removeFirst(4) // Unknown flags
-                let attributeCount = nextWord()
-                removeFirst(4) // class attribute, unused
+                let tag = parseStartTag(strings: strings,
+                                        namespace: namespace,
+                                        namespaceUrl: namespaceUrl)
 
-                let attributes = (0..<attributeCount)
-                    .map { _ in Attribute(from: &self, strings: strings, namespace: namespace) }
-                    .map(\.description)
+                xmlLines += [spaces(for: indentationLevel) + "<\(tag)>"]
 
-                let name = strings[tagName]
-                let tagContent = ([name, namespaceUrlAttribute] + attributes)
-                    .compactMap { $0 }
-                    .joined(separator: " ")
-                xmlLines.append(spaces(for: indentationLevel) + "<\(tagContent)>")
-                namespaceUrlAttribute = nil
-
+                namespaceUrl = nil
                 indentationLevel += 1
 
             case .endTag:
-                indentationLevel -= 1
-                removeFirst(4) // Tag URI
-                let tagName = nextWord()
+                let tag = parseEndTag(strings: strings)
 
-                let name = strings[tagName]
-                xmlLines.append(spaces(for: indentationLevel) + "</\(name)>")
+                indentationLevel -= 1
+                xmlLines.append(spaces(for: indentationLevel) + "</\(tag)>")
 
             case .text:
                 break
@@ -75,6 +57,42 @@ extension Array where Element == UInt8 {
         }
 
         return xmlLines.joined(separator: "\n").utf8.map { UInt8($0) }
+    }
+
+    private mutating func parseNamespace(strings: [String]) -> Namespace {
+        let prefix = nextWord()
+        let code = nextWord()
+        return Namespace(
+            code: code,
+            uri: strings[code],
+            prefix: strings[prefix]
+        )
+    }
+
+    private mutating func parseStartTag(strings: [String],
+                                        namespace: Namespace?,
+                                        namespaceUrl: String?) -> String {
+        removeFirst(4) // Tag URI
+        let tagName = nextWord()
+        removeFirst(4) // Unknown flags
+        let attributeCount = nextWord()
+        removeFirst(4) // class attribute, unused
+
+        let attributes = (0..<attributeCount)
+            .map { _ in Attribute(from: &self, strings: strings, namespace: namespace) }
+            .map(\.description)
+
+        let name = strings[tagName]
+        return ([name, namespaceUrl] + attributes)
+            .compactMap { $0 }
+            .joined(separator: " ")
+    }
+
+    private mutating func parseEndTag(strings: [String]) -> String {
+        removeFirst(4) // Tag URI
+        let tagName = nextWord()
+
+        return strings[tagName]
     }
 }
 
