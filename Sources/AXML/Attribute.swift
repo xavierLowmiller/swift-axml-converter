@@ -5,8 +5,10 @@ struct Attribute {
 	let type: Int
 	let data: Int
 
-	func resolve(in strings: [String], namespace: String?, namespaceCode: Int?) -> String {
+	// swiftlint:disable:next cyclomatic_complexity
+	func toString(_ strings: [String], namespace: String?, namespaceCode: Int?) -> String {
 		let key = strings[self.key]
+
 		let value: String
 		switch type {
 		// Null

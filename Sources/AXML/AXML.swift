@@ -114,7 +114,7 @@ private extension Array where Element == UInt8 {
 						value: nextWord(),
 						type: nextWord() >> 24,
 						data: nextWord()
-					).resolve(in: strings, namespace: currentNamespace, namespaceCode: namespaceUrlCode)
+					).toString(strings, namespace: currentNamespace, namespaceCode: namespaceUrlCode)
 				}
 
 				let namespaceUrlAttribute: String?
