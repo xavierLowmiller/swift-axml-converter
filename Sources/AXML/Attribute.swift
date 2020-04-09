@@ -24,7 +24,6 @@ struct Attribute {
 }
 
 extension Attribute: CustomStringConvertible {
-    // swiftlint:disable:next cyclomatic_complexity
     var description: String {
         "\(attributeKey)=\"\(attributeValue)\""
     }

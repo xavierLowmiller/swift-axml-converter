@@ -24,7 +24,7 @@ extension AXMLError: LocalizedError {
             return "Tags of type \(type) couldn't be recognized"
         }
     }
-    
+
     var recoverySuggestion: String? {
         switch self {
         case .invalidHeadSectionNumber:
