@@ -2,7 +2,7 @@ extension Bytes {
 	mutating func validateHead() throws {
 		let headSection = 0x00080003
 		let count = self.count
-		guard nextWord() == headSection else { throw AXMLError.invalidFileSectionNumber }
+		guard nextWord() == headSection else { throw AXMLError.invalidHeadSectionNumber }
 		guard nextWord() == count else { throw AXMLError.invalidFileSizeChecksum }
 	}
 
