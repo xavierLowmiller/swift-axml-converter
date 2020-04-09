@@ -1,0 +1,31 @@
+name: Release
+
+on:
+  push:
+     tags:
+     - '*'
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        os:
+          # Ubuntu won't work until this is rolled out: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+          # - ubuntu-latest
+          - macOS-latest
+
+    runs-on: ${{ matrix.os }}
+    steps:
+
+    - uses: actions/checkout@master
+
+    - run: swift build -c release
+
+    - run: zip axml-to-xml-${{ matrix.os }}.zip .build/release/axml-to-xml
+
+    - name: Release
+      uses: softprops/action-gh-release@master
+      with:
+        files: axml-to-xml-${{ matrix.os }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
