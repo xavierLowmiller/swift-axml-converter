@@ -46,9 +46,9 @@ extension Array where Element == UInt8 {
 				let attributeCount = nextWord()
 				removeFirst(4) // class attribute, unused
 
-				let attributes = (0..<attributeCount).map { _ in
-					Attribute(from: &self).toString(strings, namespace: namespace)
-				}
+				let attributes = (0..<attributeCount)
+					.map { _ in Attribute(from: &self, strings: strings, namespace: namespace) }
+					.map(\.description)
 
 				let name = strings[tagName]
 				let tagContent = ([name, namespaceUrlAttribute] + attributes)
