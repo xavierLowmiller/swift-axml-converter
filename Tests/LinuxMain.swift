@@ -3,5 +3,6 @@ import XCTest
 import AXMLTests
 
 var tests = [XCTestCaseEntry]()
-tests += AXMLTests.allTests()
+tests += AXMLTests.__allTests()
+
 XCTMain(tests)
