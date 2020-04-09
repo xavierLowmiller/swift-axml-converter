@@ -34,11 +34,13 @@ extension Array where Element == UInt8 {
 					prefix: strings[prefix]
 				)
 				namespaceUrlAttribute = namespace?.urlAttribute
+
 			case .endNamespace:
 				removeFirst(4) // class attribute, unused
 				removeFirst(4) // class attribute, unused
 				namespace = nil
 				namespaceUrlAttribute = nil
+
 			case .startTag:
 				removeFirst(4) // Tag URI
 				let tagName = nextWord()
@@ -58,6 +60,7 @@ extension Array where Element == UInt8 {
 				namespaceUrlAttribute = nil
 
 				indentationLevel += 1
+
 			case .endTag:
 				indentationLevel -= 1
 				removeFirst(4) // Tag URI
@@ -65,6 +68,7 @@ extension Array where Element == UInt8 {
 
 				let name = strings[tagName]
 				xmlLines.append(spaces(for: indentationLevel) + "</\(name)>")
+
 			case .text:
 				break
 			}
