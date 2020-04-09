@@ -165,7 +165,7 @@ private extension Array where Element == UInt8 {
 				namespaceUrlCode = nil
 				namespaceUrl = nil
 			case .startTag:
-				let tagUri = nextWord()
+				removeFirst(4) // Tag URI
 				let tagName = nextWord()
 				removeFirst(4) // Unknown flags
 				let attributeCount = nextWord()
@@ -197,7 +197,7 @@ private extension Array where Element == UInt8 {
 				indentationLevel += 1
 			case .endTag:
 				indentationLevel -= 1
-				let tagUri = nextWord()
+				removeFirst(4) // Tag URI
 				let tagName = nextWord()
 
 				let name = strings[tagName]
