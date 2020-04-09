@@ -9,14 +9,14 @@ public func axmlToXml(_ bytes: [UInt8]) throws -> [UInt8] {
 
 private extension Array where Element == UInt8 {
 	mutating func validateHead() throws {
-		let headSection: UInt32 = 0x00080003
+		let headSection = 0x00080003
 		let count = self.count
 		guard nextWord() == headSection else { throw AxmlError.invalidFileSectionNumber }
 		guard nextWord() == count else { throw AxmlError.invalidFileSizeChecksum }
 	}
 
 	mutating func parseStrings() throws -> [String] {
-		let stringSection: UInt32 = 0x001c0001
+		let stringSection = 0x001c0001
 		guard nextWord() == stringSection else { throw AxmlError.invalidStringSectionNumber }
 		let chunkSize = nextWord()
 
