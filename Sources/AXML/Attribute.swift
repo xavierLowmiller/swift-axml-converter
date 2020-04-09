@@ -6,7 +6,7 @@ struct Attribute {
 	let data: Int
 
 	// swiftlint:disable:next cyclomatic_complexity
-	func toString(_ strings: [String], namespace: String?, namespaceCode: Int?) -> String {
+	func toString(_ strings: [String], namespace: Namespace?) -> String {
 		let key = strings[self.key]
 
 		let value: String
@@ -58,7 +58,7 @@ struct Attribute {
 		}
 
 		let prefixedKey = key
-			.withNamespacePrefix(namespace, shouldPrefix: uri == namespaceCode)
+			.withNamespacePrefix(namespace?.prefix, shouldPrefix: uri == namespace?.code)
 
 		return "\(prefixedKey)=\"\(value)\""
 	}

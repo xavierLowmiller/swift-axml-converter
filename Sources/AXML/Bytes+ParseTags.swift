@@ -11,9 +11,8 @@ extension Array where Element == UInt8 {
 	mutating func parseTags(strings: [String]) throws -> [UInt8] {
 		var xmlLines = [#"<?xml version="1.0" encoding="utf-8"?>"#]
 
-		var currentNamespace: String?
-		var namespaceUrlCode: Int?
-		var namespaceUrl: String?
+		var namespace: Namespace?
+		var namespaceUrlAttribute: String?
 		var indentationLevel = 0
 
 		while !isEmpty {
@@ -28,16 +27,18 @@ extension Array where Element == UInt8 {
 			switch tagType {
 			case .startNamespace:
 				let prefix = nextWord()
-				let uri = nextWord()
-				currentNamespace = strings[prefix]
-				namespaceUrlCode = uri
-				namespaceUrl = strings[uri]
+				let code = nextWord()
+				namespace = Namespace(
+					code: code,
+					uri: strings[code],
+					prefix: strings[prefix]
+				)
+				namespaceUrlAttribute = namespace?.urlAttribute
 			case .endNamespace:
 				removeFirst(4) // class attribute, unused
 				removeFirst(4) // class attribute, unused
-				currentNamespace = nil
-				namespaceUrlCode = nil
-				namespaceUrl = nil
+				namespace = nil
+				namespaceUrlAttribute = nil
 			case .startTag:
 				removeFirst(4) // Tag URI
 				let tagName = nextWord()
@@ -52,15 +53,7 @@ extension Array where Element == UInt8 {
 						value: nextWord(),
 						type: nextWord() >> 24,
 						data: nextWord()
-					).toString(strings, namespace: currentNamespace, namespaceCode: namespaceUrlCode)
-				}
-
-				let namespaceUrlAttribute: String?
-				if namespaceUrl != nil {
-					namespaceUrlAttribute = "xmlns:\(currentNamespace!)=\"\(namespaceUrl!)\""
-					namespaceUrl = nil
-				} else {
-					namespaceUrlAttribute = nil
+					).toString(strings, namespace: namespace)
 				}
 
 				let name = strings[tagName]
@@ -68,6 +61,8 @@ extension Array where Element == UInt8 {
 					.compactMap { $0 }
 					.joined(separator: " ")
 				xmlLines.append(spaces(for: indentationLevel) + "<\(tagContent)>")
+				namespaceUrlAttribute = nil
+
 				indentationLevel += 1
 			case .endTag:
 				indentationLevel -= 1
