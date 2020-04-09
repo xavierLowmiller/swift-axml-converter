@@ -1,15 +1,4 @@
-public typealias Bytes = [UInt8]
-
-public func axmlToXml(_ bytes: Bytes) throws -> Bytes {
-	var bytes = bytes
-	try bytes.validateHead()
-	let strings = try bytes.parseStrings()
-	try bytes.validateResources()
-
-	return try bytes.parseTags(strings: strings)
-}
-
-private extension Array where Element == UInt8 {
+extension Array where Element == UInt8 {
 
 	private enum TagType: Int {
 		case startNamespace = 0x00100100
