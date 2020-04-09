@@ -30,7 +30,7 @@ private extension Array where Element == UInt8 {
 		while !isEmpty {
 			let rawValue = nextWord()
 			guard let tagType = TagType(rawValue: rawValue)
-				else { throw AxmlError.unrecognizedTagType(rawValue) }
+				else { throw AXMLError.unrecognizedTagType(rawValue) }
 
 			removeFirst(4) // Chunk Size, unused
 			removeFirst(4) // Line Number, unused
@@ -98,12 +98,4 @@ private extension Array where Element == UInt8 {
 
 private func spaces(for indentation: Int) -> String {
 	String([Character](repeating: " ", count: indentation * 4))
-}
-
-enum AxmlError: Error {
-	case invalidFileSectionNumber
-	case invalidStringSectionNumber
-	case invalidResourceSectionNumber
-	case invalidFileSizeChecksum
-	case unrecognizedTagType(Int)
 }

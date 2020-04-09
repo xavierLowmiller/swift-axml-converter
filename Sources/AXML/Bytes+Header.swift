@@ -2,13 +2,13 @@ extension Bytes {
 	mutating func validateHead() throws {
 		let headSection = 0x00080003
 		let count = self.count
-		guard nextWord() == headSection else { throw AxmlError.invalidFileSectionNumber }
-		guard nextWord() == count else { throw AxmlError.invalidFileSizeChecksum }
+		guard nextWord() == headSection else { throw AXMLError.invalidFileSectionNumber }
+		guard nextWord() == count else { throw AXMLError.invalidFileSizeChecksum }
 	}
 
 	mutating func parseStrings() throws -> [String] {
 		let stringSection = 0x001c0001
-		guard nextWord() == stringSection else { throw AxmlError.invalidStringSectionNumber }
+		guard nextWord() == stringSection else { throw AXMLError.invalidStringSectionNumber }
 		let chunkSize = nextWord()
 
 		// The string section starts of with a bunch of metadata
@@ -47,7 +47,7 @@ extension Bytes {
 
 	mutating func validateResources() throws {
 		let resourceSection = 0x00080180
-		guard nextWord() == resourceSection else { throw AxmlError.invalidResourceSectionNumber }
+		guard nextWord() == resourceSection else { throw AXMLError.invalidResourceSectionNumber }
 		let chunkSize = nextWord()
 		// Skip resource section
 		removeFirst(chunkSize - 8)
