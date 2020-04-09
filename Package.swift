@@ -4,18 +4,18 @@
 import PackageDescription
 
 let package = Package(
-	name: "AXML",
-	products: [
-		.library(
-			name: "AXML",
-			targets: ["AXML"])
-	],
-	targets: [
-		.target(
-			name: "AXML",
-			dependencies: []),
-		.testTarget(
-			name: "AXMLTests",
-			dependencies: ["AXML"])
-	]
+    name: "AXML",
+    products: [
+        .library(
+            name: "AXML",
+            targets: ["AXML"])
+    ],
+    targets: [
+        .target(
+            name: "AXML",
+            dependencies: []),
+        .testTarget(
+            name: "AXMLTests",
+            dependencies: ["AXML"])
+    ]
 )
