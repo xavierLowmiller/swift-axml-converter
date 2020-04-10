@@ -24,7 +24,9 @@ jobs:
 
     - run: swift build -c release
 
-    - run: zip axml-to-xml-${{ matrix.os }}.zip .build/release/axml-to-xml
+    - run: mv .build/release/axml-to-xml axml-to-xml
+
+    - run: zip axml-to-xml-${{ matrix.os }}.zip axml-to-xml
 
     - name: Release
       uses: softprops/action-gh-release@master
