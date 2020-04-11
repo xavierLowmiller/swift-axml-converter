@@ -14,12 +14,12 @@ final class AXMLtoXMLTests: XCTestCase {
     }
 }
 
-let input = URL(fileURLWithPath: #file)
+private let input = URL(fileURLWithPath: #file)
     .deletingLastPathComponent()
     .appendingPathComponent("AndroidManifest.xml")
 
 // swiftlint:disable line_length
-let expected = """
+private let expected = """
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="18" android:versionName="2.8.0" android:installLocation="0" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" package="de.cineaste.android" platformBuildVersionCode="28" platformBuildVersionName="9">
     <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="28">
