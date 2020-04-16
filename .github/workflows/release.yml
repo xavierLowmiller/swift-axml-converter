@@ -13,8 +13,7 @@ jobs:
     strategy:
       matrix:
         os:
-          # Ubuntu won't work until this is rolled out: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
-          # - ubuntu-latest
+          - ubuntu-latest
           - macOS-latest
 
     runs-on: ${{ matrix.os }}
